@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Avanthi's Pet Haven</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <nav>
+        <a href="index.html">HOME</a>
+        <a href="pets.html">PETS</a>
+        <a href="about.html">ABOUT</a>
+        <a href="contact.html">CONTACT</a>
+        <a href="adopt.html">ADOPT NOW</a>
+        <a href="admin.html">ADMIN</a>
+    </nav>
+
+    <div class="container">
+        <div class="hero">
+
+            <div class="left">
+                <h1>Adopt a Pet Today!</h1>
+                <p>Give a pet a second chance and make a new friend for life.</p>
+
+                <a href="pets.html">
+                    <button>Browse Pets</button>
+                </a>
+            </div>
+
+            <div class="form-box">
+                <h2>Do You Like Pets?</h2>
+
+                <input id="fname" type="text" placeholder="First Name">
+                <input id="lname" type="text" placeholder="Last Name">
+                <input id="email" type="email" placeholder="Email">
+                <textarea id="reason" placeholder="Why do you want to adopt?" rows="5"></textarea>
+
+                <button onclick="submitForm()">Submit</button>
+            </div>
+
+        </div>
+    </div>
+
+    <footer>
+        © 2026 Avanthi's Pet Haven | All Rights Reserved
+    </footer>
+
+    <script>
+        async function submitForm() {
+            const data = {
+                firstName: document.getElementById("fname").value,
+                lastName: document.getElementById("lname").value,
+                email: document.getElementById("email").value,
+                reason: document.getElementById("reason").value
+            };
+
+            const response = await fetch("http://localhost:5000/submit-form", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+            alert(result.message);
+        }
+    </script>
+
+</body>
+</html>

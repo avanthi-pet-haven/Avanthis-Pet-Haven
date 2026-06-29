@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Contact - Avanthi's Pet Haven</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <nav>
+        <a href="index.html">HOME</a>
+        <a href="pets.html">PETS</a>
+        <a href="about.html">ABOUT</a>
+        <a href="contact.html">CONTACT</a>
+        <a href="adopt.html">ADOPT NOW</a>
+    </nav>
+
+    <div class="container">
+        <div class="hero">
+
+            <div class="left">
+                <h1>Contact Us</h1>
+
+                <p style="margin-top:30px;">
+                    We would love to hear from you. Feel free to contact us for
+                    pet adoption support, inquiries, or feedback.
+                </p>
+
+                <p style="margin-top:30px;">📞 Phone: +91 9876543210</p>
+                <p style="margin-top:20px;">📧 Email: avanthi@gmail.com</p>
+                <p style="margin-top:20px;">📍 Address: Madurai, Tamil Nadu</p>
+            </div>
+
+            <div class="form-box">
+                <h2>Feedback Form</h2>
+
+                <input id="cname" type="text" placeholder="Your Name">
+                <input id="cemail" type="email" placeholder="Your Email">
+                <textarea id="cfeedback" rows="5" placeholder="Feedback"></textarea>
+
+                <button onclick="sendContact()">Send</button>
+            </div>
+
+        </div>
+    </div>
+
+    <footer>
+        © 2026 Avanthi's Pet Haven
+    </footer>
+
+<script>
+async function sendContact() {
+    const name = document.getElementById("cname").value;
+    const email = document.getElementById("cemail").value;
+    const message = document.getElementById("cfeedback").value;
+
+    if (!name || !email || !message) {
+        alert("Please fill all fields!");
+        return;
+    }
+
+    const response = await fetch("http://localhost:5000/contact", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            name: name,
+            email: email,
+            message: message
+        })
+    });
+
+    const result = await response.json();
+    alert(result.message);
+}
+</script>
+
+</body>
+</html>

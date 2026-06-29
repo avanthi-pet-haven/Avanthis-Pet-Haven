@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Panel</title>
+    <style>
+        body{
+            font-family: Arial, sans-serif;
+            margin:0;
+            padding:20px;
+            background-image: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('images/human.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        h1{
+            text-align:center;
+            color:white;
+            margin-bottom:30px;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+            background:white;
+            border-radius:12px;
+            overflow:hidden;
+        }
+
+        th,td{
+            border:1px solid #ccc;
+            padding:12px;
+            text-align:left;
+        }
+
+        th{
+            background:#4CAF50;
+            color:white;
+        }
+
+        button{
+            padding:8px 14px;
+            margin:2px;
+            cursor:pointer;
+            border:none;
+            border-radius:8px;
+            background:#4CAF50;
+            color:white;
+            font-weight:bold;
+        }
+
+        button:hover{
+            background:#388e3c;
+        }
+
+        #loginBox{
+            width:420px;
+            margin:100px auto;
+            background:rgba(255,255,255,0.96);
+            padding:40px;
+            border-radius:20px;
+            box-shadow:0 0 20px rgba(0,0,0,0.35);
+        }
+
+        #loginBox h2{
+            text-align:center;
+            margin-bottom:20px;
+        }
+
+        #loginBox input{
+            width:100%;
+            padding:14px;
+            margin-top:15px;
+            border:1px solid #ccc;
+            border-radius:10px;
+            box-sizing:border-box;
+        }
+
+        #loginBtn{
+            width:100%;
+            margin-top:20px;
+            padding:14px;
+            font-size:18px;
+        }
+
+        #adminSection{
+            display:none;
+        }
+    </style>
+</head>
+<body>
+
+<div id="loginBox">
+    <h2>Admin Login</h2>
+    <input id="username" type="text" placeholder="Username">
+    <input id="password" type="password" placeholder="Password">
+    <button id="loginBtn" onclick="login()">Login</button>
+</div>
+
+<div id="adminSection">
+    <h1>Admin Panel</h1>
+
+    <table id="dataTable">
+        <tr>
+            <th>Page</th>
+            <th>Name</th>
+            <th>Email / Phone</th>
+            <th>Details</th>
+            <th>Actions</th>
+        </tr>
+    </table>
+</div>
+
+<script>
+function login(){
+    const user = document.getElementById("username").value;
+    const pass = document.getElementById("password").value;
+
+    if(user === "admin" && pass === "1234"){
+        document.getElementById("loginBox").style.display = "none";
+        document.getElementById("adminSection").style.display = "block";
+        loadTable();
+    } else {
+        alert("Wrong Username or Password!");
+    }
+}
+
+function loadTable(){
+    fetch("http://localhost:5000/admin-data")
+    .then(res=>res.json())
+    .then(data=>{
+        const table=document.getElementById("dataTable");
+
+        table.innerHTML = `
+        <tr>
+            <th>Page</th>
+            <th>Name</th>
+            <th>Email / Phone</th>
+            <th>Details</th>
+            <th>Actions</th>
+        </tr>`;
+
+        data.forEach((item,index)=>{
+            let name = item.firstName ? item.firstName+" "+item.lastName :
+                       item.name || "-";
+
+            let contact = item.email || item.phone || item.contact || "-";
+            let details = item.reason || item.message || item.details || "-";
+
+            table.innerHTML += `
+            <tr>
+                <td>${item.page}</td>
+                <td>${name}</td>
+                <td>${contact}</td>
+                <td>${details}</td>
+                <td>
+                    <button onclick="editRow(${index})">Edit</button>
+                    <button onclick="deleteRow(${index})">Delete</button>
+                </td>
+            </tr>`;
+        });
+    });
+}
+
+async function editRow(index){
+    let name = prompt("New Name:");
+    let contact = prompt("New Email / Phone:");
+    let details = prompt("New Details:");
+
+    if(name===null || contact===null || details===null) return;
+
+    await fetch(`http://localhost:5000/edit-data/${index}`,{
+        method:"PUT",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify({
+            page:"Edited",
+            name:name,
+            contact:contact,
+            details:details
+        })
+    });
+
+    alert("Updated!");
+    loadTable();
+}
+
+async function deleteRow(index){
+    await fetch(`http://localhost:5000/delete-data/${index}`,{
+        method:"DELETE"
+    });
+
+    alert("Deleted!");
+    loadTable();
+}
+</script>
+
+</body>
+</html>

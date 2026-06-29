@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Adopt Pet - Avanthi's Pet Haven</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="pets.html">Pets</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+    </nav>
+
+    <h1 style="text-align:center; margin-top:30px;">Adoption Form 🐾</h1>
+
+    <form onsubmit="submitAdopt(event)" style="
+        width:500px;
+        margin:40px auto;
+        background:white;
+        padding:35px;
+        border-radius:20px;
+        box-shadow:0 0 15px rgba(0,0,0,0.2);">
+
+        <p style="margin-top:15px; margin-bottom:10px;">Name:</p>
+        <input id="aname" type="text" style="width:100%; padding:12px;">
+
+        <p style="margin-top:20px; margin-bottom:10px;">Phone Number:</p>
+        <input id="aphone" type="text" style="width:100%; padding:12px;">
+
+        <p style="margin-top:20px; margin-bottom:10px;">Pet Name:</p>
+        <input id="apet" type="text" style="width:100%; padding:12px;">
+
+        <br><br>
+        <button type="submit">Submit</button>
+
+        <div id="otpSection" style="display:none; margin-top:20px;">
+            <p style="margin-bottom:10px;">Enter OTP:</p>
+            <input id="otpInput" type="text" style="width:100%; padding:12px;">
+            <br><br>
+            <button type="button" onclick="verifyOTP()">Verify OTP</button>
+        </div>
+    </form>
+
+<script>
+let generatedOTP = "";
+let formData = {};
+
+async function submitAdopt(event){
+    event.preventDefault();
+
+    const name = document.getElementById("aname").value;
+    const phone = document.getElementById("aphone").value;
+    const pet = document.getElementById("apet").value;
+
+    if(!name || !phone || !pet){
+        alert("Please fill all fields!");
+        return;
+    }
+
+    formData = {name, phone, pet};
+
+    generatedOTP = Math.floor(1000 + Math.random() * 9000).toString();
+
+    alert("Demo OTP Sent: " + generatedOTP);
+
+    document.getElementById("otpSection").style.display = "block";
+}
+
+async function verifyOTP(){
+    const userOTP = document.getElementById("otpInput").value;
+
+    if(userOTP !== generatedOTP){
+        alert("Wrong OTP!");
+        return;
+    }
+
+    alert("OTP Verified Successfully!");
+
+    const response = await fetch("http://localhost:5000/adopt", {
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json"
+        },
+        body: JSON.stringify(formData)
+    });
+
+    const result = await response.json();
+    alert(result.message);
+}
+</script>
+
+</body>
+</html>
