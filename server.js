@@ -19,6 +19,11 @@ function saveData(newData) {
     fs.writeFileSync("data.json", JSON.stringify(data, null, 2));
 }
 
+/* ROOT ROUTE - ADDED */
+app.get("/", (req, res) => {
+    res.send("Avanthis Pet Haven Backend Running Successfully!");
+});
+
 app.post("/submit-form", (req, res) => {
     const formData = req.body;
     console.log("Received Form Data:", formData);
@@ -97,6 +102,9 @@ app.delete("/delete-data/:index", (req, res) => {
     }
 });
 
-app.listen(5000, () => {
-    console.log("Server running at http://localhost:5000");
+/* RENDER PORT FIX - CHANGED */
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
