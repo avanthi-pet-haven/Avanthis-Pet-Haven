@@ -127,7 +127,7 @@ function login(){
 }
 
 function loadTable(){
-    fetch("http://localhost:5000/admin-data")
+    fetch("https://avanthis-pet-haven.onrender.com/admin-data")
     .then(res=>res.json())
     .then(data=>{
         const table=document.getElementById("dataTable");
@@ -170,7 +170,7 @@ async function editRow(index){
 
     if(name===null || contact===null || details===null) return;
 
-    await fetch(`http://localhost:5000/edit-data/${index}`,{
+    await fetch(`https://avanthis-pet-haven.onrender.com/edit-data/${index}`,{
         method:"PUT",
         headers:{ "Content-Type":"application/json" },
         body: JSON.stringify({
@@ -186,7 +186,7 @@ async function editRow(index){
 }
 
 async function deleteRow(index){
-    await fetch(`http://localhost:5000/delete-data/${index}`,{
+    await fetch(`https://avanthis-pet-haven.onrender.com/delete-data/${index}`,{
         method:"DELETE"
     });
 
