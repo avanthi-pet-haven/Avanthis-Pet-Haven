@@ -78,7 +78,7 @@ async function verifyOTP(){
 
     alert("OTP Verified Successfully!");
 
-    const response = await fetch("http://localhost:5000/adopt", {
+    const response = await fetch("https://avanthis-pet-haven.onrender.com/adopt", {
         method:"POST",
         headers:{
             "Content-Type":"application/json"
